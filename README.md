@@ -1,7 +1,5 @@
 # Cthulhu Discord Bot
-Interactive discord bot that allows to throw dice according to the pen and paper game with the same name.
-
-
+An interactive discord bot that allows throwing dice according to the pen and paper game **Cthulhu**.
 
 ## Usage
 
