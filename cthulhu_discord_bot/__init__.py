@@ -312,5 +312,9 @@ async def probe(ctx):
         return
 
 
-if __name__ == "__main__":
+def main():
     client.run(token)
+
+
+if __name__ == "__main__":
+    main()

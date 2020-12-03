@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cthulhu_discord_bot"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Tim Sabelmann"]
 license = "MIT"
@@ -11,7 +11,7 @@ python-dotenv = "^0.15.0"
 "discord.py" = "^1.5.1"
 
 [tool.poetry.scripts]
-cthulhu = "greet.location:cli"
+cthulhu = "cthulhu_discord_bot:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

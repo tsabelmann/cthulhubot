@@ -16,7 +16,7 @@ An interactive discord bot that allows throwing dice according to the pen and pa
    echo "export DISCORD_TOKEN=YOUR_TOKEN" > .env
    ```
 5. ```bash
-   poetry run eventlogger
+   poetry run cthulhu
    ```
 
 ## Usage
