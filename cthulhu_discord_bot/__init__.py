@@ -34,12 +34,91 @@ __calculus_regex__ = re.compile(
 )
 
 __probe_regex__ = re.compile(
-    r'\s*(?P<probe>[0-100]{1,2})\s+((?P<id>m|M|b|B|bon|mal|bonus|malus)\s+(?P<value>[0-9]{1,2}))?\s*'
+    r'\s*(?P<probe>[0-9]{1,2})(\s+(?P<id>m|M|b|B|bon|mal|bonus|malus)\s+(?P<value>[0-9]{1,2}))?\s*'
 )
 
 __bonus_malus_regex__ = re.compile(
     r'\s*(?P<value>([0-9]+))\s*'
 )
+
+
+# Probe Message Computation
+def probe_message(probe_value: int, die_value: int):
+    if die_value == 1:
+        return "Critical success"
+    elif die_value <= (probe_value // 5):
+        return "Extreme success"
+    elif die_value <= (probe_value // 2):
+        return "Difficult success"
+    elif die_value <= probe_value:
+        return "Regular success"
+    else:
+        if probe_value < 50:
+            if die_value >= 96:
+                return "You are doomed!"
+            else:
+                return "You have screwed up!"
+        else:
+            if die_value == 100:
+                return "You are doomed!"
+            else:
+                return "You have screwed up!"
+
+
+# Compute bonus
+def compute_bonus(die_value: int, bonus_dice: int = 0):
+    dice = [random.randint(0, 10) * 10 for _ in range(bonus_dice)]
+    if 0 <= die_value <= 10:
+        return die_value, dice, False
+    else:
+        # Compute 10 part
+        die_10 = (die_value // 10) * 10
+
+        # Compute 1 part
+        die_1 = die_value % 10
+
+        # Compute new 10 part
+        new_die_10 = min([die_10, *dice])
+
+        if new_die_10 == die_10:
+            return die_value, die_10, dice, False
+        else:
+            # Compute new die value
+            new_die_value = new_die_10 + die_1
+
+            return new_die_value, new_die_10, dice, True
+
+
+# Compute malus
+def compute_malus(die_value: int, malus_dice: int = 0):
+    # Malus Dice
+    dice = [random.randint(0, 10) * 10 for _ in range(malus_dice)]
+
+    # Compute 10 part
+    die_10 = (die_value // 10) * 10
+
+    # Compute 1 part
+    die_1 = die_value % 10
+
+    new_dice = []
+    if die_1 != 0:
+        if 100 in dice:
+            new_dice = filter(lambda x: x != 100, [die_10, *dice])
+        else:
+            new_dice = dice
+    else:
+        new_dice = dice
+
+    # Compute new 10 part
+    new_die_10 = max([die_10, *new_dice])
+
+    if new_die_10 == die_10:
+        return die_value, die_10, dice, False
+    else:
+        # Compute new die value
+        new_die_value = new_die_10 + die_1
+
+        return new_die_value, new_die_10, dice, True
 
 
 @client.event
@@ -168,7 +247,79 @@ async def probe(ctx):
     match = __probe_regex__.search(message)
 
     if match:
-        await ctx.send(match.groupdict())
+        # Compute transmitted probe (ability) value
+        probe_value = match.group("probe")
+        probe_value = int(probe_value)
+
+        # Throw 1d100
+        die_roll = random.randint(1, 100)
+
+        # Get author name, preferable nickname, secondly normal user name
+        author_name = ctx.message.author.nick or ctx.message.author.name
+
+        # Bonus / Malus computation
+        if match.group("id") and match.group("id").lower() in ["b", "B", "bon", "bonus"]:
+            # Get amount of bonus dice
+            bonus_dice = match.group("value")
+            bonus_dice = int(bonus_dice)
+
+            # Compute bonus
+            die_value, die_10, dice, applied = compute_bonus(die_roll, bonus_dice)
+
+            # Probe message
+            probe_mess = probe_message(probe_value, die_value)
+
+            if applied:
+                # Compute index in dice that holds the die_10 value
+                index = dice.index(die_10)
+
+                # Compute new dice string
+                lst = [f"**{die}**" if i == index else f"{die}" for i, die in enumerate(dice)]
+                dice_str = f"[{', '.join(lst)}]"
+
+                # Print message
+                await ctx.send(
+                    f"**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\nMalus: {dice_str}\nResult: **{die_value}**\n**{probe_mess}**")
+            else:
+                # Print message
+                await ctx.send(
+                    f"**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\nMalus: {dice}\nResult: **{die_value}**\n**{probe_mess}**")
+
+        elif match.group("id") and match.group("id").lower() in ["m", "M", "mal", "malus"]:
+            # Get amount of bonus dice
+            malus_dice = match.group("value")
+            malus_dice = int(malus_dice)
+
+            # Compute malus
+            die_value, die_10, dice, applied = compute_malus(die_roll, malus_dice)
+
+            # Probe message
+            probe_mess = probe_message(probe_value, die_value)
+
+            if applied:
+                # Compute index in dice that holds the die_10 value
+                index = dice.index(die_10)
+
+                # Compute new dice string
+                lst = [f"**{die}**" if i == index else f"{die}" for i, die in enumerate(dice)]
+                dice_str = f"[{', '.join(lst)}]"
+
+                # Print message
+                await ctx.send(
+                    f"**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\nMalus: {dice_str}\nResult: **{die_value}**\n**{probe_mess}**")
+            else:
+                # Print message
+                await ctx.send(
+                    f"**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\nMalus: {dice}\nResult: **{die_value}**\n**{probe_mess}**")
+
+        else:
+            # Probe message
+            probe_mess = probe_message(probe_value, die_roll)
+
+            # Print message
+            await ctx.send(f"""**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\n**{probe_mess}**""")
+    else:
+        return
 
 
 if __name__ == "__main__":
