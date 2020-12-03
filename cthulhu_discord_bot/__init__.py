@@ -21,7 +21,6 @@ client = commands.Bot(command_prefix="#")
 # Get token from environment
 token = os.getenv("DISCORD_TOKEN")
 
-
 __dice_regex__ = re.compile(
     r'(?P<dice>(\s*\+?\s*[0-9]{1,2}(d|D)[0-9]+)+)\s*(?P<values>(\s*(\+|-)\s*[0-9]{1,2})*\s*)'
 )
@@ -64,11 +63,9 @@ async def roll(ctx):
             value = m.group("value")
             value = int(value)
 
-            rng_numbers.extend([random.randint(1, value) for i in range(dice)])
+            rng_numbers.append([random.randint(1, value) for i in range(dice)])
 
-        rng_sum = sum(rng_numbers)
-
-        print(match.group("values"))
+        rng_sum = sum([sum(rng) for rng in rng_numbers])
 
         # Change sum
         additions = []
@@ -85,11 +82,17 @@ async def roll(ctx):
             elif sign == "-":
                 additions.append(+calc_value)
 
+        # Add additional values to sum
         rng_sum += sum(additions)
 
+        # Get author nick name preferably, or, the user name secondly
         author_name = ctx.message.author.nick or ctx.message.author.name
 
-        await ctx.send(f"**{author_name}**\nRoll: `{rng_numbers}`\nAdditions: {additions}\nResult: **{rng_sum}**")
+        # Construct message
+        await ctx.send(f"""**{author_name}**\n""" \
+                       f"""Roll: `{''.join([str(rng) for rng in rng_numbers])}`\n""" \
+                       f"""Additions: {additions}\n""" \
+                       f"""Result: **{rng_sum}**""")
     else:
         return
 
@@ -102,7 +105,7 @@ async def bonus(ctx, bonus_dice=1):
     # Assign the old die value to the return value new_die_value
     new_die_value = die_value
 
-    dice = [random.randint(0, 10)*10 for _ in range(bonus_dice)]
+    dice = [random.randint(0, 10) * 10 for _ in range(bonus_dice)]
     if 0 <= die_value <= 10:
         pass
     else:
