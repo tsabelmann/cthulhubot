@@ -1,3 +1,5 @@
+"""Module that provides the connection, the commands, and the utility functions for bonus, malus, and messages."""
+
 # Import D
 import discord
 from discord.ext import commands
