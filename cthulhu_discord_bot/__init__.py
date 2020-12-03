@@ -179,66 +179,49 @@ async def roll(ctx):
 @client.command(name="bonus")
 async def bonus(ctx, bonus_dice=1):
     # Random Die Value from [1,100]
-    die_value = random.randint(1, 100)
+    die_roll = random.randint(1, 100)
 
-    # Assign the old die value to the return value new_die_value
-    new_die_value = die_value
-
-    dice = [random.randint(0, 10) * 10 for _ in range(bonus_dice)]
-    if 0 <= die_value <= 10:
-        pass
-    else:
-        # Compute 10 part
-        die_10 = (die_value // 10) * 10
-
-        # Compute 1 part
-        die_1 = die_value % 10
-
-        # Compute new 10 part
-        new_die_10 = min([die_10, *dice])
-
-        # Compute new die value
-        new_die_value = new_die_10 + die_1
+    # Compute bonus
+    die_value, die_10, dice, applied = compute_bonus(die_roll, bonus_dice)
 
     # Get author name, preferable nickname, secondly normal user name
     author_name = ctx.message.author.nick or ctx.message.author.name
 
-    await ctx.send(f"**{author_name}**\nRoll: `{die_value}`\nBonus: {dice}\nResult: **{new_die_value}**")
+    if applied:
+        # Compute index in dice that holds the die_10 value
+        index = dice.index(die_10)
+
+        # Compute new dice string
+        lst = [f"**{die}**" if i == index else f"{die}" for i, die in enumerate(dice)]
+        dice_str = f"[{', '.join(lst)}]"
+
+        await ctx.send(f"**{author_name}**\nRoll: **{die_roll}**\nBonus: {dice_str}\nResult: **{die_value}**")
+    else:
+        await ctx.send(f"**{author_name}**\nRoll: **{die_roll}**\nBonus: {dice}\nResult: **{die_value}**")
 
 
 @client.command(name="malus")
 async def malus(ctx, malus_dice=1):
     # Random Die Value from [1,100]
-    die_value = random.randint(1, 100)
+    die_roll = random.randint(1, 100)
 
-    # Malus Dice
-    dice = [random.randint(0, 10) * 10 for _ in range(malus_dice)]
-
-    # Compute 10 part
-    die_10 = (die_value // 10) * 10
-
-    # Compute 1 part
-    die_1 = die_value % 10
-
-    new_dice = []
-    if die_1 != 0:
-        if 100 in dice:
-            new_dice = filter(lambda x: x != 100, [die_10, *dice])
-        else:
-            new_dice = dice
-    else:
-        new_dice = dice
-
-    # Compute new 10 part
-    new_die_10 = max([die_10, *new_dice])
-
-    # Compute new die value
-    new_die_value = new_die_10 + die_1
+    # Compute malus
+    die_value, die_10, dice, applied = compute_malus(die_roll, malus_dice)
 
     # Get author name, preferable nickname, secondly normal user name
     author_name = ctx.message.author.nick or ctx.message.author.name
 
-    await ctx.send(f"**{author_name}**\nRoll: `{die_value}`\nMalus: {dice}\nResult: **{new_die_value}**")
+    if applied:
+        # Compute index in dice that holds the die_10 value
+        index = dice.index(die_10)
+
+        # Compute new dice string
+        lst = [f"**{die}**" if i == index else f"{die}" for i, die in enumerate(dice)]
+        dice_str = f"[{', '.join(lst)}]"
+
+        await ctx.send(f"**{author_name}**\nRoll: **{die_roll}**\nMalus: {dice_str}\nResult: **{die_value}**")
+    else:
+        await ctx.send(f"**{author_name}**\nRoll: **{die_roll}**\nMalus: {dice}\nResult: **{die_value}**")
 
 
 @client.command(name="probe")
