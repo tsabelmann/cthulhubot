@@ -162,16 +162,21 @@ async def roll(ctx):
                 additions.append(+calc_value)
 
         # Add additional values to sum
-        rng_sum += sum(additions)
+        add_sum = sum(additions)
+
+        # Total sum
+        total_sum = rng_sum + add_sum
 
         # Get author nick name preferably, or, the user name secondly
         author_name = ctx.message.author.nick or ctx.message.author.name
 
         # Construct message
-        await ctx.send(f"""**{author_name}**\n""" \
-                       f"""Roll: `{''.join([str(rng) for rng in rng_numbers])}`\n""" \
-                       f"""Additions: {additions}\n""" \
-                       f"""Result: **{rng_sum}**""")
+        await ctx.send(f"""**{author_name}**\n"""
+                       f"""Roll: {''.join([str(rng) for rng in rng_numbers])}\n"""
+                       f"""Sum: **{rng_sum}**\n""" 
+                       f"""Additions: {additions}\n"""
+                       f"""Sum: **{add_sum}**\n"""
+                       f"""Result: **{total_sum}**""")
     else:
         return
 
