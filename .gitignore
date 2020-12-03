@@ -1,0 +1,9 @@
+# Python 
+.venv
+__pycache__
+
+# Environment Files
+.env
+
+# Idea
+.idea

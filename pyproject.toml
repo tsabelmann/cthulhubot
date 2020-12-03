@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "cthulhu_discord_bot"
+version = "0.1.0"
+description = ""
+authors = ["Tim Sabelmann"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+python-dotenv = "^0.15.0"
+"discord.py" = "^1.5.1"
+
+[tool.poetry.scripts]
+cthulhu = "greet.location:cli"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
