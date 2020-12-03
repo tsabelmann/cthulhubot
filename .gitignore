@@ -3,3 +3,6 @@
 
 # Environment Files
 .env
+
+# Idea
+.idea
