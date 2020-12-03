@@ -4,10 +4,10 @@ An interactive discord bot that allows throwing dice according to the pen and pa
 ## Installation
 
 1. ```bash
-   git clone https://github.com/tsabelmann/eventlogger
+   git clone https://github.com/tsabelmann/cthulhu_discord_bot
    ```
 2. ```bash
-   cd eventlogger
+   cd cthulhu_discord_bot
    ```
 3. ```bash
    poetry install
