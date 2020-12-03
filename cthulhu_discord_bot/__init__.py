@@ -121,9 +121,6 @@ async def bonus(ctx, bonus_dice=1):
         # Compute new die value
         new_die_value = new_die_10 + die_1
 
-    # Sort die values in ascending order
-    dice.sort()
-
     # Get author name, preferable nickname, secondly normal user name
     author_name = ctx.message.author.nick or ctx.message.author.name
 
