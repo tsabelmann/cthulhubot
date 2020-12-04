@@ -340,12 +340,30 @@ async def probe(ctx):
         return
 
 
+# async def play_sound(ctx, file_path):
+#     # grab the user who sent the command
+#     user = ctx.message.author
+#     voice_channel = user.voice.channel
+#     channel = None
+#     if voice_channel is not None:
+#         voice_channel = ctx.author.voice.channel
+#         voice = ctx.channel.guild.voice_client
+#         if voice is None:
+#             voice = await voice_channel.connect()
+#         elif voice.channel != voice_channel:
+#             await voice.move_to(voice_channel)
+#         voice.play(discord.FFmpegPCMAudio(file_path))
+#     else:
+#         pass
+#         #await client.say('User is not in a channel.')
+
 async def play_sound(ctx, file_path):
-    # grab the user who sent the command
-    user = ctx.message.author
-    voice_channel = user.voice.channel
-    channel = None
-    if voice_channel is not None:
+    # Grab the user who sent the command
+    author = ctx.message.author
+    if isinstance(author, discord.Member) \
+            and hasattr(author, 'voice') \
+            and author.voice is not None \
+            and author.voice.channel is not None:
         voice_channel = ctx.author.voice.channel
         voice = ctx.channel.guild.voice_client
         if voice is None:
@@ -355,7 +373,6 @@ async def play_sound(ctx, file_path):
         voice.play(discord.FFmpegPCMAudio(file_path))
     else:
         pass
-        #await client.say('User is not in a channel.')
 
 
 def main():
