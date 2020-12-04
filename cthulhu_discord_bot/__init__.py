@@ -269,6 +269,7 @@ async def probe(ctx):
                                f"""Result: **{die_value}**\n"""
                                f"""**{probe_mess}**""")
 
+            # Play sound
             if die_value == 1:
                 await play_sound(ctx, __dice_success_path__)
             elif die_value == 100:
@@ -314,6 +315,7 @@ async def probe(ctx):
                                f"""Result: **{die_value}**\n"""
                                f"""**{probe_mess}**""")
 
+            # Play sound
             if die_value == 1:
                 await play_sound(ctx, __dice_success_path__)
             elif die_value == 100:
@@ -331,6 +333,7 @@ async def probe(ctx):
                            f"""Roll: [**{die_10:02d}**][**{die_1}**] Ability: **{probe_value}**\n"""
                            f"""**{probe_mess}**""")
 
+            # Play sound
             if die_value == 1:
                 await play_sound(ctx, __dice_success_path__)
             elif die_value == 100:
