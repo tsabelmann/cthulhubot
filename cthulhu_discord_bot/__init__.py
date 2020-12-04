@@ -207,10 +207,6 @@ async def roll(ctx):
 
 @client.command(name="probe")
 async def probe(ctx):
-    print(__dir__path__)
-    print(__dice_success_path__)
-    print(__dice_fail_path__)
-
     message = ctx.message.content
     match = __probe_regex__.search(message)
 
