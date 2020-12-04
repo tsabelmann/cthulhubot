@@ -327,6 +327,7 @@ async def probe(ctx):
             # Print message
             await ctx.send(f"""**{author_name}**\n"""
                            f"""Roll: [**{die_10:02d}**][**{die_1}**] Ability: **{probe_value}**\n"""
+                           f"""Result: **{die_value}**\n"""
                            f"""**{probe_mess}**""")
 
             # Play sound
