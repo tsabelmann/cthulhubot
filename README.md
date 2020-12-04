@@ -47,8 +47,6 @@ Values to be added to the final sum consists of a *sign* and a *value* part.
 - `#roll 2d100 1d10 1d8 1d6 1d4 1d3`
 - `#roll 1d20 +3`
 - `#roll 1d20 +1+2+3`
-- `#bonus 0 \\ the same as #roll 1d100 `
-- `#malus 0 \\ the same as #roll 1d100`
 - `#probe 50 \\ neither bonus nor malus is applied`
 - `#probe 50 b 1`
 - `#probe 50 B 1`
