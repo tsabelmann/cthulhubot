@@ -1,5 +1,8 @@
 """Module that provides the connection, the commands, and the utility functions for bonus, malus, and messages."""
 
+# Import A
+import asyncio
+
 # Import D
 import discord
 from discord.ext import commands
@@ -10,9 +13,23 @@ from dotenv import load_dotenv
 # Import O
 import os
 
+# Import P
+import pathlib
+
 # Import R
 import re
 import random
+
+# PATH
+
+# Path to this directory
+__dir__path__ = pathlib.Path(__file__).parent.parent
+
+__dice_success_path__ = __dir__path__.joinpath(pathlib.Path("sound/success.m4a")).resolve()
+
+__dice_fail_path__ = __dir__path__.joinpath(pathlib.Path("sound/fail.m4a")).resolve()
+
+# ENV
 
 # Load environment variables from .env file
 load_dotenv()
@@ -24,15 +41,15 @@ client = commands.Bot(command_prefix="#")
 token = os.getenv("DISCORD_TOKEN")
 
 __dice_regex__ = re.compile(
-    r'(?P<dice>(\s*\+?\s*[0-9]{1,2}(d|D)[0-9]+)+)\s*(?P<values>(\s*(\+|-)\s*[0-9]{1,2})*\s*)'
+    r'(?P<dice>(\s*\+?\s*[0-9]{1,2}([dD])[0-9]+)+)\s*(?P<values>(\s*([+\-])\s*[0-9]{1,2})*\s*)'
 )
 
 __die_regex__ = re.compile(
-    r"\s*(?P<dice>[0-9]{1,2})(d|D)(?P<value>[0-9]+)\s*"
+    r"\s*(?P<dice>[0-9]{1,2})([dD])(?P<value>[0-9]+)\s*"
 )
 
 __calculus_regex__ = re.compile(
-    r'\s*((?P<sign>(\+|-))\s*(?P<value>[0-9]{1,2}))\s*'
+    r'\s*((?P<sign>([+\-]))\s*(?P<value>[0-9]{1,2}))\s*'
 )
 
 __probe_regex__ = re.compile(
@@ -68,65 +85,70 @@ def probe_message(probe_value: int, die_value: int):
 
 
 # Compute bonus
-def compute_bonus(die_value: int, bonus_dice: int = 0):
-    dice = [random.randint(0, 10) * 10 for _ in range(bonus_dice)]
-    if 0 <= die_value <= 10:
-        return die_value, dice, False
-    else:
-        # Compute 10 part
-        die_10 = (die_value // 10) * 10
+def compute_bonus(die_10: int, die_1: int, bonus_dice: int = 0):
+    # Throw bonus_dice amount of bonus d10 dice
+    dice = [random.randint(0, 9) * 10 for _ in range(bonus_dice)]
 
-        # Compute 1 part
-        die_1 = die_value % 10
+    # Compute dice value
+    die_value = dice2value(die_10, die_1)
+
+    # Decide if bonus is applicable
+    if 0 <= die_value <= 10:
+        return die_10, dice, False
+    else:
+        new_dice = [die_10, *dice]
+        if 0 in new_dice and die_1 == 0:
+            new_dice = [die for die in new_dice if die != 0]
 
         # Compute new 10 part
-        new_die_10 = min([die_10, *dice])
+        new_die_10 = min(new_dice)
 
         if new_die_10 == die_10:
-            return die_value, die_10, dice, False
+            return die_10, dice, False
         else:
-            # Compute new die value
-            new_die_value = new_die_10 + die_1
-
-            return new_die_value, new_die_10, dice, True
+            return new_die_10, dice, True
 
 
 # Compute malus
-def compute_malus(die_value: int, malus_dice: int = 0):
-    # Malus Dice
-    dice = [random.randint(0, 10) * 10 for _ in range(malus_dice)]
+def compute_malus(die_10: int, die_1: int, malus_dice: int = 0):
+    # Throw malus_dice amount of malus d10 dice
+    dice = [random.randint(0, 9) * 10 for _ in range(malus_dice)]
 
-    # Compute 10 part
-    die_10 = (die_value // 10) * 10
-
-    # Compute 1 part
-    die_1 = die_value % 10
-
-    new_dice = []
-    if die_1 != 0:
-        if 100 in dice:
-            new_dice = filter(lambda x: x != 100, [die_10, *dice])
+    # Decide based on die_1 if 100 can be created
+    if die_1 == 0:
+        if 0 in dice:
+            new_die_10 = 0
         else:
-            new_dice = dice
+            new_die_10 = max([die_10, *dice])
     else:
-        new_dice = dice
-
-    # Compute new 10 part
-    new_die_10 = max([die_10, *new_dice])
+        new_die_10 = max([die_10, *dice])
 
     if new_die_10 == die_10:
-        return die_value, die_10, dice, False
+        return die_10, dice, False
     else:
-        # Compute new die value
-        new_die_value = new_die_10 + die_1
+        return new_die_10, dice, True
 
-        return new_die_value, new_die_10, dice, True
+
+def dice2value(die_10: int, die_1: int):
+    if die_10 == 0 and die_1 == 0:
+        return 100
+    else:
+        return die_10 + die_1
+
+
+def value2dice(value):
+    if value == 100:
+        return 0, 0
+    else:
+        die_10 = (value // 10) * 10
+        die_1 = value % 10
+        return die_10, die_1
 
 
 @client.event
 async def on_ready():
     await client.change_presence(status=discord.Status.online,
-                                 activity=discord.Game("Awaken me..."))
+                                 activity=discord.Game(name="Awaken me..."), )
     print("I am online")
 
 
@@ -144,7 +166,7 @@ async def roll(ctx):
             value = m.group("value")
             value = int(value)
 
-            rng_numbers.append([random.randint(1, value) for i in range(dice)])
+            rng_numbers.append([random.randint(1, value) for _ in range(dice)])
 
         rng_sum = sum([sum(rng) for rng in rng_numbers])
 
@@ -175,60 +197,12 @@ async def roll(ctx):
         # Construct message
         await ctx.send(f"""**{author_name}**\n"""
                        f"""Roll: {''.join([str(rng) for rng in rng_numbers])}\n"""
-                       f"""Sum: **{rng_sum}**\n""" 
+                       f"""Sum: **{rng_sum}**\n"""
                        f"""Additions: {additions}\n"""
                        f"""Sum: **{add_sum}**\n"""
                        f"""Result: **{total_sum}**""")
     else:
         return
-
-
-@client.command(name="bonus")
-async def bonus(ctx, bonus_dice=1):
-    # Random Die Value from [1,100]
-    die_roll = random.randint(1, 100)
-
-    # Compute bonus
-    die_value, die_10, dice, applied = compute_bonus(die_roll, bonus_dice)
-
-    # Get author name, preferable nickname, secondly normal user name
-    author_name = ctx.message.author.nick or ctx.message.author.name
-
-    if applied:
-        # Compute index in dice that holds the die_10 value
-        index = dice.index(die_10)
-
-        # Compute new dice string
-        lst = [f"**{die}**" if i == index else f"{die}" for i, die in enumerate(dice)]
-        dice_str = f"[{', '.join(lst)}]"
-
-        await ctx.send(f"**{author_name}**\nRoll: **{die_roll}**\nBonus: {dice_str}\nResult: **{die_value}**")
-    else:
-        await ctx.send(f"**{author_name}**\nRoll: **{die_roll}**\nBonus: {dice}\nResult: **{die_value}**")
-
-
-@client.command(name="malus")
-async def malus(ctx, malus_dice=1):
-    # Random Die Value from [1,100]
-    die_roll = random.randint(1, 100)
-
-    # Compute malus
-    die_value, die_10, dice, applied = compute_malus(die_roll, malus_dice)
-
-    # Get author name, preferable nickname, secondly normal user name
-    author_name = ctx.message.author.nick or ctx.message.author.name
-
-    if applied:
-        # Compute index in dice that holds the die_10 value
-        index = dice.index(die_10)
-
-        # Compute new dice string
-        lst = [f"**{die}**" if i == index else f"{die}" for i, die in enumerate(dice)]
-        dice_str = f"[{', '.join(lst)}]"
-
-        await ctx.send(f"**{author_name}**\nRoll: **{die_roll}**\nMalus: {dice_str}\nResult: **{die_value}**")
-    else:
-        await ctx.send(f"**{author_name}**\nRoll: **{die_roll}**\nMalus: {dice}\nResult: **{die_value}**")
 
 
 @client.command(name="probe")
@@ -241,8 +215,11 @@ async def probe(ctx):
         probe_value = match.group("probe")
         probe_value = int(probe_value)
 
-        # Throw 1d100
-        die_roll = random.randint(1, 100)
+        # Throw 1d10 as tens unit
+        die_10 = random.randint(0, 9) * 10
+
+        # Throw 1d10
+        die_1 = random.randint(0, 9)
 
         # Get author name, preferable nickname, secondly normal user name
         author_name = ctx.message.author.nick or ctx.message.author.name
@@ -254,26 +231,45 @@ async def probe(ctx):
             bonus_dice = int(bonus_dice)
 
             # Compute bonus
-            die_value, die_10, dice, applied = compute_bonus(die_roll, bonus_dice)
+            new_die_10, dice, applied = compute_bonus(die_10, die_1, bonus_dice)
+
+            # Compute die_value
+            die_value = dice2value(new_die_10, die_1)
 
             # Probe message
             probe_mess = probe_message(probe_value, die_value)
 
             if applied:
                 # Compute index in dice that holds the die_10 value
-                index = dice.index(die_10)
+                index = dice.index(new_die_10)
 
                 # Compute new dice string
-                lst = [f"**{die}**" if i == index else f"{die}" for i, die in enumerate(dice)]
+                lst = [f"**{die:02d}**" if i == index else f"{die:02d}" for i, die in enumerate(dice)]
                 dice_str = f"[{', '.join(lst)}]"
 
                 # Print message
-                await ctx.send(
-                    f"**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\nMalus: {dice_str}\nResult: **{die_value}**\n**{probe_mess}**")
+                await ctx.send(f"""**{author_name}**\n"""
+                               f"""Roll: [{die_10:02d}][**{die_1}**] Ability: **{probe_value}**\n"""
+                               f"""Bonus: {dice_str}\n"""
+                               f"""Result: **{die_value}**\n"""
+                               f"""**{probe_mess}**""")
             else:
+                # Compute new dice string
+                lst = [f"{die:02d}" for die in dice]
+                dice_str = f"[{', '.join(lst)}]"
+
                 # Print message
-                await ctx.send(
-                    f"**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\nMalus: {dice}\nResult: **{die_value}**\n**{probe_mess}**")
+                await ctx.send(f"""**{author_name}**\n"""
+                               f"""Roll: [**{die_10:02d}**][**{die_1}**] Ability: **{probe_value}**\n"""
+                               f"""Bonus: {dice_str}\n"""
+                               f"""Result: **{die_value}**\n"""
+                               f"""**{probe_mess}**""")
+
+            # Play sound
+            if die_value == 1:
+                await play_sound(ctx, __dice_success_path__)
+            elif die_value == 100:
+                await play_sound(ctx, __dice_fail_path__)
 
         elif match.group("id") and match.group("id").lower() in ["m", "M", "mal", "malus"]:
             # Get amount of bonus dice
@@ -281,35 +277,109 @@ async def probe(ctx):
             malus_dice = int(malus_dice)
 
             # Compute malus
-            die_value, die_10, dice, applied = compute_malus(die_roll, malus_dice)
+            new_die_10, dice, applied = compute_malus(die_10, die_1, malus_dice)
+
+            # Compute die_value
+            die_value = dice2value(new_die_10, die_1)
 
             # Probe message
             probe_mess = probe_message(probe_value, die_value)
 
             if applied:
                 # Compute index in dice that holds the die_10 value
-                index = dice.index(die_10)
+                index = dice.index(new_die_10)
 
                 # Compute new dice string
-                lst = [f"**{die}**" if i == index else f"{die}" for i, die in enumerate(dice)]
+                lst = [f"**{die:02d}**" if i == index else f"{die:02d}" for i, die in enumerate(dice)]
                 dice_str = f"[{', '.join(lst)}]"
 
                 # Print message
-                await ctx.send(
-                    f"**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\nMalus: {dice_str}\nResult: **{die_value}**\n**{probe_mess}**")
+                await ctx.send(f"""**{author_name}**\n"""
+                               f"""Roll: [{die_10:02d}][**{die_1}**] Ability: **{probe_value}**\n"""
+                               f"""Malus: {dice_str}\n"""
+                               f"""Result: **{die_value}**\n"""
+                               f"""**{probe_mess}**""")
             else:
+                # Compute new dice string
+                lst = [f"{die:02d}" for die in dice]
+                dice_str = f"[{', '.join(lst)}]"
+
                 # Print message
-                await ctx.send(
-                    f"**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\nMalus: {dice}\nResult: **{die_value}**\n**{probe_mess}**")
+                await ctx.send(f"""**{author_name}**\n"""""
+                               f"""Roll: [**{die_10:02d}**][**{die_1}**]  Ability: **{probe_value}**\n"""
+                               f"""Malus: {dice_str}\n"""
+                               f"""Result: **{die_value}**\n"""
+                               f"""**{probe_mess}**""")
+
+            # Play sound
+            if die_value == 1:
+                await play_sound(ctx, __dice_success_path__)
+            elif die_value == 100:
+                await play_sound(ctx, __dice_fail_path__)
 
         else:
+            # Compute die value
+            die_value = dice2value(die_10, die_1)
+
             # Probe message
-            probe_mess = probe_message(probe_value, die_roll)
+            probe_mess = probe_message(probe_value, die_value)
 
             # Print message
-            await ctx.send(f"""**{author_name}**\nRoll: **{die_roll}** Ability: **{probe_value}**\n**{probe_mess}**""")
+            await ctx.send(f"""**{author_name}**\n"""
+                           f"""Roll: [**{die_10:02d}**][**{die_1}**] Ability: **{probe_value}**\n"""
+                           f"""Result: **{die_value}**\n"""
+                           f"""**{probe_mess}**""")
+
+            # Play sound
+            if die_value == 1:
+                await play_sound(ctx, __dice_success_path__)
+            elif die_value == 100:
+                await play_sound(ctx, __dice_fail_path__)
+
     else:
         return
+
+
+# async def play_sound(ctx, file_path):
+#     # grab the user who sent the command
+#     user = ctx.message.author
+#     voice_channel = user.voice.channel
+#     channel = None
+#     if voice_channel is not None:
+#         voice_channel = ctx.author.voice.channel
+#         voice = ctx.channel.guild.voice_client
+#         if voice is None:
+#             voice = await voice_channel.connect()
+#         elif voice.channel != voice_channel:
+#             await voice.move_to(voice_channel)
+#         voice.play(discord.FFmpegPCMAudio(file_path))
+#     else:
+#         pass
+#         #await client.say('User is not in a channel.')
+
+async def play_sound(ctx, file_path):
+    # Grab the user who sent the command
+    author = ctx.message.author
+    if isinstance(author, discord.Member) \
+            and hasattr(author, 'voice') \
+            and author.voice is not None \
+            and author.voice.channel is not None:
+        # Get voice channel the author is in
+        voice_channel = ctx.author.voice.channel
+
+        # Get the (output) voice of the bot
+        voice = ctx.channel.guild.voice_client
+        if voice is None:
+            # Join voice channel of the author and get the (output) voice
+            voice = await voice_channel.connect()
+        elif voice.channel != voice_channel:
+            # Change (output) voice of bot if it is on a different channel
+            await voice.move_to(voice_channel)
+
+        # Play audio
+        voice.play(discord.FFmpegPCMAudio(file_path))
+    else:
+        pass
 
 
 def main():
