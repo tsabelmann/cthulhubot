@@ -23,7 +23,7 @@ import random
 # PATH
 
 # Path to this directory
-__dir__path__ = pathlib.Path(__file__).parent.parent
+__dir__path__ = pathlib.Path(__file__).parent
 
 __dice_success_path__ = __dir__path__.joinpath(pathlib.Path("sound/success.m4a")).resolve()
 
