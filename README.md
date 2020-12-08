@@ -1,5 +1,5 @@
 # Cthulhu Discord Bot
-An interactive discord bot that allows throwing dice according to the pen and paper game **Cthulhu**.
+An interactive discord bot that allows convenient commands for dice throwing considering the pen and paper game **Cthulhu**.
 
 ## Installation
 
@@ -20,7 +20,7 @@ An interactive discord bot that allows throwing dice according to the pen and pa
    ```
 
 ## Usage
-The **Cthulhu** discord bot provides four commands: **#roll**, **#bonus**, **#malus**, and **#probe**. The **#roll** command allows the throwing of dice and the subsequent summation and addition of optional values. The **#bonus** and **#malus** commands throw **one** d100 with an arbitrary amount of **bonus** or **malus** dice that can improve or worsen the tens digit of the d100. Finally, the **#probe** command allows the check of ones *ability* against **one** thrown d100 with additional *bonus* or *malus* dice.
+The **Cthulhu** discord bot provides two commands: **#roll** and **#probe**. The **#roll** command allows the throwing of dice and the subsequent summation and addition of optional values. The **#probe** command allows the check of ones *ability* against **one** thrown <u>d100</u> with *additional* **bonus** or **malus** dice.
 
 ## Dice Syntax
 
@@ -31,6 +31,11 @@ A regular die is specified be the *amount* of dice you want to throw and the *di
 - `1d100`
 - `2d100`
 - `1d20`
+- 3d10
+- 1d8
+- 6d6
+- 1d4
+- 2d3
 
 ## Value Syntax
 
