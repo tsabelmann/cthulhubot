@@ -40,12 +40,14 @@ client = commands.Bot(command_prefix="#")
 # Get token from environment
 token = os.getenv("DISCORD_TOKEN")
 
+# REGEX
+
 __dice_regex__ = re.compile(
-    r'(?P<dice>(\s*\+?\s*[0-9]{1,2}([dD])[0-9]+)+)\s*(?P<values>(\s*([+\-])\s*[0-9]{1,2})*\s*)'
+    r'(?P<dice>(\s*\+?\s*([1-9][0-9]{0,2})([dDwW])([1-9][0-9]*))+)\s*(?P<values>(\s*([+\-])\s*[0-9]{1,2})*\s*)'
 )
 
 __die_regex__ = re.compile(
-    r"\s*(?P<dice>[0-9]{1,2})([dD])(?P<value>[0-9]+)\s*"
+    r"\s*(?P<die>[1-9][0-9]{0,2})([dDwW])(?P<value>([1-9][0-9]*))\s*"
 )
 
 __calculus_regex__ = re.compile(
@@ -53,11 +55,13 @@ __calculus_regex__ = re.compile(
 )
 
 __probe_regex__ = re.compile(
-    r'\s*(?P<probe>[0-9]{1,2})(\s+(?P<id>m|M|b|B|bon|mal|bonus|malus)\s+(?P<value>[0-9]{1,2}))?\s*'
+    r'\s*(?P<probe>[0-9]{1,3})'
+    r'(\s*(?P<id>[mM]|[bB]|[bB][oO][nN][uU][sS]|[mM][aA][lL][uU][sS])\s*(?P<value>[0-9]{1,2}))?'
+    r'\s*'
 )
 
 __bonus_malus_regex__ = re.compile(
-    r'\s*(?P<value>([0-9]+))\s*'
+    r'\s*(?P<value>([0-9]{1,2}))\s*'
 )
 
 
@@ -148,7 +152,8 @@ def value2dice(value):
 @client.event
 async def on_ready():
     await client.change_presence(status=discord.Status.online,
-                                 activity=discord.Game(name="Awaken me..."), )
+                                 activity=discord.Activity(name="#roll/#probe",
+                                                           type=discord.ActivityType.listening))
     print("I am online")
 
 
@@ -160,7 +165,7 @@ async def roll(ctx):
     if match:
         rng_numbers = []
         for m in __die_regex__.finditer(match.group("dice")):
-            dice = m.group("dice")
+            dice = m.group("die")
             dice = int(dice)
 
             value = m.group("value")
