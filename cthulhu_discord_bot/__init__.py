@@ -40,12 +40,14 @@ client = commands.Bot(command_prefix="#")
 # Get token from environment
 token = os.getenv("DISCORD_TOKEN")
 
+# REGEX
+
 __dice_regex__ = re.compile(
-    r'(?P<dice>(\s*\+?\s*[0-9]{1,2}([dD])[0-9]+)+)\s*(?P<values>(\s*([+\-])\s*[0-9]{1,2})*\s*)'
+    r'(?P<dice>(\s*\+?\s*[0-9]{1,2}([dDwW])[0-9]+)+)\s*(?P<values>(\s*([+\-])\s*[0-9]{1,2})*\s*)'
 )
 
 __die_regex__ = re.compile(
-    r"\s*(?P<dice>[0-9]{1,2})([dD])(?P<value>[0-9]+)\s*"
+    r"\s*(?P<dice>[0-9]{1,2})([dDwW])(?P<value>[0-9]+)\s*"
 )
 
 __calculus_regex__ = re.compile(
