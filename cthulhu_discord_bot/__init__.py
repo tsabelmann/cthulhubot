@@ -152,7 +152,8 @@ def value2dice(value):
 @client.event
 async def on_ready():
     await client.change_presence(status=discord.Status.online,
-                                 activity=discord.Activity(name="#roll/#probe", type=discord.ActivityType.listening))
+                                 activity=discord.Activity(name="#roll/#probe",
+                                                           type=discord.ActivityType.listening))
     print("I am online")
 
 
