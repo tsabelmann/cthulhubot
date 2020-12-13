@@ -47,7 +47,7 @@ __dice_regex__ = re.compile(
 )
 
 __die_regex__ = re.compile(
-    r"\s*(?P<dice>[0-9]{1,2})([dDwW])(?P<value>[0-9]+)\s*"
+    r"\s*(?P<die>[0-9]{1,2})([dDwW])(?P<value>[0-9]+)\s*"
 )
 
 __calculus_regex__ = re.compile(
@@ -162,7 +162,7 @@ async def roll(ctx):
     if match:
         rng_numbers = []
         for m in __die_regex__.finditer(match.group("dice")):
-            dice = m.group("dice")
+            dice = m.group("die")
             dice = int(dice)
 
             value = m.group("value")
