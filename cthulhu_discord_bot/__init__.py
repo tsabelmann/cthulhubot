@@ -55,11 +55,13 @@ __calculus_regex__ = re.compile(
 )
 
 __probe_regex__ = re.compile(
-    r'\s*(?P<probe>[0-9]{1,2})(\s+(?P<id>m|M|b|B|bon|mal|bonus|malus)\s+(?P<value>[0-9]{1,2}))?\s*'
+    r'\s*(?P<probe>[0-9]{1,3})'
+    r'(\s*(?P<id>[mM]|[bB]|[bB][oO][nN][uU][sS]|[mM][aA][lL][uU][sS])\s*(?P<value>[0-9]{1,2}))?'
+    r'\s*'
 )
 
 __bonus_malus_regex__ = re.compile(
-    r'\s*(?P<value>([0-9]+))\s*'
+    r'\s*(?P<value>([0-9]{1,2}))\s*'
 )
 
 
