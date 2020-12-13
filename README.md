@@ -29,17 +29,20 @@ A regular die is specified be the *amount* of dice you want to throw and the *di
 ### Examples
 
 - `1d100`
-- `2d100`
-- `1d20`
-- 3d10
-- 1d8
-- 6d6
-- 1d4
-- 2d3
+- `2D100`
+- `1w20`
+- `3W10`
+- `1d8`
+- `6D6`
+- `1W4`
+- `2w3`
+
+### Disclaimer
+The letters **w** and **W** can be used as a shortcut because the german word for die or dice is Würfel.
 
 ## Value Syntax
 
-Values to be added to the final sum consists of a *sign* and a *value* part.
+Values to be added to the final sum consists of a *sign*, and a *value* part.
 
 ### Examples
 
@@ -55,12 +58,20 @@ Values to be added to the final sum consists of a *sign* and a *value* part.
 - `#probe 50 \\ neither bonus nor malus is applied`
 - `#probe 50 b 1`
 - `#probe 50 B 1`
-- `#probe 50 bon 1`
 - `#probe 50 bonus 1`
 - `#probe 50 m 1`
 - `#probe 50 M 1`
-- `#probe 50 mal 1`
 - `#probe 50 malus 1`
+- `#probe 50b1`
+- `#probe 50B1`
+- `#probe 50 b1`
+- `#probe 50B 1`
+- `#probe 50 BOnUs 1`
+- `#probe 50m1`
+- `#probe 50M1`
+- `#probe 50 m1`
+- `#probe 50M 1`
+- `#probe 50 MAlUs 1`
 
 ## Acknowledgement
 
