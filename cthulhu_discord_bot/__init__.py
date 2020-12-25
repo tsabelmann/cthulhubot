@@ -43,11 +43,11 @@ token = os.getenv("DISCORD_TOKEN")
 # REGEX
 
 __dice_regex__ = re.compile(
-    r'(?P<dice>(\s*\+?\s*([1-9][0-9]{0,2})([dDwW])([1-9][0-9]*))+)\s*(?P<values>(\s*([+\-])\s*[0-9]{1,2})*\s*)'
+    r'(\s*[+\-]?\s*[1-9][0-9]*([dDwW][1-9][0-9]*)?)+'
 )
 
 __die_regex__ = re.compile(
-    r"\s*(?P<die>[1-9][0-9]{0,2})([dDwW])(?P<value>([1-9][0-9]*))\s*"
+    r'(?P<sign>[+\-])?\s*(?P<value>[1-9][0-9]*)([dDwW](?P<dvalue>[1-9][0-9]*))?'
 )
 
 __calculus_regex__ = re.compile(
