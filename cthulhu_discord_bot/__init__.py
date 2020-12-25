@@ -43,11 +43,11 @@ token = os.getenv("DISCORD_TOKEN")
 # REGEX
 
 __dice_regex__ = re.compile(
-    r'(?P<dice>(\s*\+?\s*([1-9][0-9]{0,2})([dDwW])([1-9][0-9]*))+)\s*(?P<values>(\s*([+\-])\s*[0-9]{1,2})*\s*)'
+    r'(\s*[+\-]?\s*[1-9][0-9]*([dDwW][1-9][0-9]*)?)+'
 )
 
 __die_regex__ = re.compile(
-    r"\s*(?P<die>[1-9][0-9]{0,2})([dDwW])(?P<value>([1-9][0-9]*))\s*"
+    r'(?P<sign>[+\-])?\s*(?P<value>[1-9][0-9]*)([dDwW](?P<dvalue>[1-9][0-9]*))?'
 )
 
 __calculus_regex__ = re.compile(
@@ -163,32 +163,39 @@ async def roll(ctx):
     match = __dice_regex__.search(message)
 
     if match:
+        # List of random dice
         rng_numbers = []
-        for m in __die_regex__.finditer(match.group("dice")):
-            dice = m.group("die")
-            dice = int(dice)
 
+        # List of additions
+        additions = []
+        for m in __die_regex__.finditer(message):
+            # Get sign
+            sign = m.group("sign")
+            if sign is None or sign == "+":
+                sign = 1
+            else:
+                sign = -1
+
+            # Get addition or amount of dice
             value = m.group("value")
             value = int(value)
 
-            rng_numbers.append([random.randint(1, value) for _ in range(dice)])
+            # Get die eye value
+            dvalue = m.group("dvalue")
 
+            # Decide whether value is additional value or die
+            if dvalue is not None:
+                # Compute dvalue (int) from dvalue (str)
+                dvalue = int(dvalue)
+
+                # Append dice to rng_numbers
+                rng_numbers.append([sign * random.randint(1, dvalue) for _ in range(value)])
+            else:
+                # Append additional value
+                additions.append(sign * value)
+
+        # Add random dice to sum
         rng_sum = sum([sum(rng) for rng in rng_numbers])
-
-        # Change sum
-        additions = []
-        for m in __calculus_regex__.finditer(match.group("values")):
-            group = m.groupdict()
-            sign = group["sign"]
-
-            calc_value = group["value"]
-            calc_value = int(calc_value)
-
-            if sign == "+":
-                additions.append(+calc_value)
-
-            elif sign == "-":
-                additions.append(+calc_value)
 
         # Add additional values to sum
         add_sum = sum(additions)
