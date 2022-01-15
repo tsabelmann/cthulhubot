@@ -157,7 +157,7 @@ async def on_ready():
     print("I am online")
 
 
-@client.command(name="roll")
+@client.command(name="roll", aliases=["r"])
 async def roll(ctx):
     message = ctx.message.content
     match = __dice_regex__.search(message)
@@ -216,8 +216,13 @@ async def roll(ctx):
     else:
         return
 
+@client.command(name="rollo", aliases=["rolöl"])
+async def rollo(ctx):
+    await ctx.send("https://tenor.com/view/lemmy-kilmister-awesome-lemmy-motorhead-kilmister-gif-18864805")
 
-@client.command(name="probe")
+
+
+@client.command(name="probe", aliases=["prob", "p"])
 async def probe(ctx):
     message = ctx.message.content
     match = __probe_regex__.search(message)
