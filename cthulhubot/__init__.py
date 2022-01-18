@@ -25,9 +25,9 @@ import random
 # Path to this directory
 __dir__path__ = pathlib.Path(__file__).parent
 
-__dice_success_path__ = __dir__path__.joinpath(pathlib.Path("sound/success.m4a")).resolve()
+__dice_success_path__ = __dir__path__.joinpath(pathlib.Path("../sounds/success.m4a")).resolve()
 
-__dice_fail_path__ = __dir__path__.joinpath(pathlib.Path("sound/fail.m4a")).resolve()
+__dice_fail_path__ = __dir__path__.joinpath(pathlib.Path("../sounds/fail.m4a")).resolve()
 
 # ENV
 
@@ -157,6 +157,11 @@ async def on_ready():
     print("I am online")
 
 
+@client.event
+async def on_command_error(ctx, error):
+    await ctx.send("You typed the wrong command: Consider **probe**, **roll**")
+
+
 @client.command(name="roll", aliases=["r"])
 async def roll(ctx):
     message = ctx.message.content
@@ -216,10 +221,10 @@ async def roll(ctx):
     else:
         return
 
+
 @client.command(name="rollo", aliases=["rolöl"])
 async def rollo(ctx):
     await ctx.send("https://tenor.com/view/lemmy-kilmister-awesome-lemmy-motorhead-kilmister-gif-18864805")
-
 
 
 @client.command(name="probe", aliases=["prob", "p"])
@@ -398,10 +403,3 @@ async def play_sound(ctx, file_path):
     else:
         pass
 
-
-def main():
-    client.run(token)
-
-
-if __name__ == "__main__":
-    main()
