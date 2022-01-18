@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "cthulhu_discord_bot"
+name = "cthulhubot"
 version = "1.6.0"
 description = ""
 authors = ["Tim Sabelmann"]
@@ -11,9 +11,9 @@ python-dotenv = "^0.15.0"
 "discord.py" = "^1.5.1"
 PyNaCl = "^1.4.0"
 
-[tool.poetry.scripts]
-cthulhu = "cthulhu_discord_bot:main"
-
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+cthulhu = "cthulhubot.frontend.cli:main"
