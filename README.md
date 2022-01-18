@@ -1,4 +1,4 @@
-# Cthulhu Discord Bot
+# cthulhubot
 An interactive discord bot that allows convenient commands for dice throwing considering the pen and paper game **Cthulhu**.
 
 ## Installation
@@ -7,7 +7,7 @@ An interactive discord bot that allows convenient commands for dice throwing con
    git clone https://github.com/tsabelmann/cthulhu_discord_bot
    ```
 2. ```bash
-   cd cthulhu_discord_bot
+   cd cthulhubot
    ```
 3. ```bash
    poetry install
