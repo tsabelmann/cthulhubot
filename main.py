@@ -1,8 +1,7 @@
-"""Entrypoint for cthulhu discord bot."""
+"""The outside entry point."""
 
-from cthulhu_discord_bot import main
+from cthulhubot.frontend import cli
 
 
 if __name__ == "__main__":
-    main()
-
+    cli.main()
