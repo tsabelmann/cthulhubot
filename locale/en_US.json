@@ -1,0 +1,15 @@
+{
+  "CHOICE_COMMAND_PARAM_VALUE_NAME": "wert",
+  "CHOICE_COMMAND_DESCRIPTION": "Wählt einen Wert aus einer komma-separierten Liste aus.",
+
+  "COMMAND_D4_NAME": "d4",
+  "COMMAND_D4_DESCRIPTION": "Wirft einen Würfel mit vier Seiten.",
+  "COMMAND_D6_NAME": "d6",
+  "COMMAND_D6_DESCRIPTION": "Wirft einen Würfel.",
+  "COMMAND_D8_NAME": "d8",
+  "COMMAND_D8_DESCRIPTION": "Wirft einen Würfel mit acht Seiten.",
+  "COMMAND_D12_NAME": "d12",
+  "COMMAND_D12_DESCRIPTION": "Wirft einen Würfel mit zwölf Seiten.",
+  "COMMAND_D20_NAME": "d20",
+  "COMMAND_D20_DESCRIPTION": "Wirft einen Würfel mit zwanzig Seiten."
+}
