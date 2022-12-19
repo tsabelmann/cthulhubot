@@ -18,7 +18,7 @@ class CthulhuBot(Bot):
         intents.message_content = True
 
         super().__init__(
-            command_prefix=["#", "/"],
+            command_prefix=["#"],
             help_command=None,
             intents=intents,
             command_sync_flags=command_sync_flags,
