@@ -11,5 +11,20 @@
   "COMMAND_D12_NAME": "d12",
   "COMMAND_D12_DESCRIPTION": "Wirft einen Würfel mit zwölf Seiten.",
   "COMMAND_D20_NAME": "d20",
-  "COMMAND_D20_DESCRIPTION": "Wirft einen Würfel mit zwanzig Seiten."
+  "COMMAND_D20_DESCRIPTION": "Wirft einen Würfel mit zwanzig Seiten.",
+
+  "CRITICAL_SUCCESS": "Kritischer Erfolg",
+  "EXTREME_SUCCESS": "Extremer Erfolg",
+  "DIFFICULT_SUCCESS": "Schwieriger Erfolg",
+  "REGULAR_SUCCESS": "Regulärer Erfolg",
+  "FAILURE": "Misserfolg",
+  "DOOM": "Kritischer Fehlschlag",
+
+  "COMMAND_PROBE_DESCRIPTION": "Befehl, der die Fähigkeit des Investigators überprüft.",
+  "COMMAND_PROBE_PARAM_ABILITY": "fähigkeit",
+  "COMMAND_PROBE_PARAM_ABILITY_DESCRIPTION": "Der Fähigkeitswert, meist zwischen 0 und 100.",
+  "COMMAND_PROBE_PARAM_BONUS": "bonus",
+  "COMMAND_PROBE_PARAM_BONUS_DESCRIPTION": "Die Anzahl an Bonus Würfeln.",
+  "COMMAND_PROBE_PARAM_MALUS": "malus",
+  "COMMAND_PROBE_PARAM_MALUS_DESCRIPTION": "Die Anzahl an Malus Würfeln."
 }
