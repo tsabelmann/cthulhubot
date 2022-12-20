@@ -3,11 +3,13 @@
 
 from pathlib import Path
 from disnake import ApplicationCommandInteraction
+from disnake.ext.commands import Context
 from disnake import FFmpegPCMAudio
 from disnake import Member
+import typing
 
 
-async def play_sound(ctx: ApplicationCommandInteraction, file_path: Path):
+async def play_sound(ctx: typing.Union[ApplicationCommandInteraction, Context], file_path: Path):
     # Grab the user who sent the command
     author = ctx.author
     if isinstance(author, Member) \
