@@ -3,9 +3,17 @@
 
 from disnake import Localized
 
+import re
 import enum
 import random
 import typing
+
+
+__probe_regex__ = re.compile(
+    r'\s*(?P<probe>[0-9]{1,3})'
+    r'(\s*(?P<id>[mM]|[bB]|[bB][oO][nN][uU][sS]|[mM][aA][lL][uU][sS])\s*(?P<value>[0-9]{1,2}))?'
+    r'\s*'
+)
 
 
 def dice2value(die_10: int, die_1: int):
@@ -81,7 +89,29 @@ class Probe:
 
     @classmethod
     def from_str(cls, value: str):
-        pass
+        match = __probe_regex__.search(value)
+        if match:
+            # Compute transmitted probe (ability) value
+            ability = match.group("probe")
+            ability = int(ability)
+
+            # Bonus / Malus computation
+            if match.group("id") and match.group("id").lower() in ["b", "B", "bon", "bonu", "bonus"]:
+                # Get amount of bonus dice
+                bonus = match.group("value")
+                bonus = int(bonus)
+
+                return cls(ability, bonus=bonus)
+            elif match.group("id") and match.group("id").lower() in ["m", "M", "mal", "malu", "malus"]:
+                # Get amount of bonus dice
+                malus = match.group("value")
+                malus = int(malus)
+
+                return cls(ability, malus=malus)
+            else:
+                return cls(ability)
+        else:
+            raise ValueError
 
     def probe(self) -> "ProbeResult":
         die_10 = random.randint(0, 9)
