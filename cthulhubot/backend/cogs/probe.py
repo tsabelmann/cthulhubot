@@ -22,7 +22,7 @@ class ProbeCog(commands.Cog):
         self.bot = bot
         self._success_sound_paths = success_sound_paths
         self._failure_sound_paths = failure_sound_paths
-        self._play_sounds = play_sound
+        self._play_sounds = play_sounds
 
     @commands.slash_command(name="probe",
                             description=Localized[str]("Command that allows to probe an investigators ability.",
