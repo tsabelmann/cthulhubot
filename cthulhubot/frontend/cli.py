@@ -4,7 +4,7 @@
 import os
 
 from cthulhubot.backend.bot import CthulhuBot
-from cthulhubot.backend.cogs import Legacy, Dice, ProbeCog
+from cthulhubot.backend.cogs import LegacyCog, Dice, ProbeCog
 from dotenv import load_dotenv
 
 from disnake.ext.commands import Bot
@@ -16,7 +16,11 @@ def main():
     bot = CthulhuBot()
     bot.i18n.load("locale/")
 
-    bot.add_cog(Legacy(bot))
+    bot.add_cog(LegacyCog(bot,
+                          success_sound_paths=["sounds/success.m4a"],
+                          failure_sound_paths=["sounds/fail.m4a"],
+                          play_sounds=True)
+    )
     bot.add_cog(Dice(bot))
     bot.add_cog(ProbeCog(bot,
                          success_sound_paths=["sounds/success.m4a"],
