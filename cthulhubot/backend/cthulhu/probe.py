@@ -1,12 +1,14 @@
 """
 """
 
-from disnake import Localized
+from disnake import Localized, LocalizationProtocol, Locale
+from cthulhubot.backend.utils.localization import AdvancedLocalized
 
 import re
 import enum
 import random
 import typing
+from typing import Union
 
 
 __probe_regex__ = re.compile(
@@ -185,7 +187,12 @@ class ProbeResult:
     def is_success(self) -> bool:
         return (self.value() <= self.ability)
 
-    def render(self, username: str, description: str = "") -> str:
+    def render(self, 
+               username: str, 
+               description: str = "", 
+               prot: Union[LocalizationProtocol, None] = None,
+               locale: Union[Locale, None] = None
+               ) -> str:
         success = self.success()
         
         if description != None and description != "":
@@ -239,16 +246,28 @@ class ProbeResult:
 
         # Compute success level
         if success == ProbeSuccess.CRITICAL_SUCCESS:
+            critical = AdvancedLocalized("Critical success", key="CRITIAL_SUCCESS", prot=prot, locale=locale)
+            result += f"**{Localized('Critical success', key='CRITICAL_SUCCESS').string}**\n"
             result += f"**{Localized('Critical success', key='CRITICAL_SUCCESS').string}**\n"
         elif success == ProbeSuccess.EXTREME_SUCCESS:
-            result += f"**{Localized('Extreme success', key='EXTREME_SUCCESS').string}**\n"
+            extreme = AdvancedLocalized("Extreme success", key="EXTREME_SUCCESS", prot=prot, locale=locale)
+            result += f"**{extreme}**\n"
+            # result += f"**{Localized('Extreme success', key='EXTREME_SUCCESS').string}**\n"
         elif success == ProbeSuccess.DIFFICULT_SUCCESS:
-            result += f"**{Localized('Difficult success', key='DIFFICULT_SUCCESS').string}**\n"
+            difficult = AdvancedLocalized("Difficult success", key="DIFFICULT_SUCCESS", prot=prot, locale=locale)
+            result += f"**{difficult}**\n"
+            # result += f"**{Localized('Difficult success', key='DIFFICULT_SUCCESS').string}**\n"
         elif success == ProbeSuccess.REGULAR_SUCCESS:
-            result += f"**{Localized('Regular success', key='REGULAR_SUCCESS').string}**\n"
+            regular = AdvancedLocalized("Regular success", key="REGULAR_SUCCESS", prot=prot, locale=locale)
+            result += f"**{regular}**\n"
+            # result += f"**{Localized('Regular success', key='REGULAR_SUCCESS').string}**\n"
         elif success == ProbeSuccess.FAILURE:
-            result += f"**{Localized('You have screwed up!', key='FAILURE').string}**\n"
+            failure = AdvancedLocalized("You have screwed up!", key="FAILURE", prot=prot, locale=locale)
+            result += f"**{failure}**\n"
+            # result += f"**{Localized('You have screwed up!', key='FAILURE').string}**\n"
         else:
-            result += f"**{Localized('You are doomed!', key='DOOM').string}**\n"
+            doom = AdvancedLocalized("You are doomed!", key="DOOM", prot=prot, locale=locale)
+            result += f"**{doom}**\n"
+            # result += f"**{Localized('You are doomed!', key='DOOM').string}**\n"
 
         return result
