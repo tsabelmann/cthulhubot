@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 
 from disnake.ext.commands import Bot
 from disnake.ext import commands
-import disnake
 
 
 def main():
