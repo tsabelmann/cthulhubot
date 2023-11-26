@@ -20,6 +20,7 @@ import typing
 class ProbeForceView(View):
     def __init__(self, 
                  user, 
+                 bot,
                  cog, 
                  ability: int, 
                  bonus: int, 
@@ -30,6 +31,7 @@ class ProbeForceView(View):
                  timeout: float | None = 180) -> None:
         super().__init__(timeout=timeout)
         self.user = user
+        self.bot = bot
         self.cog = cog
         self.ability = ability
         self.bonus = bonus
@@ -45,7 +47,7 @@ class ProbeForceView(View):
         probe = Probe(self.ability, self.bonus, self.malus)
         probe_result = probe.probe()
         username = self.user.display_name
-        result = probe_result.render(username, self.description)
+        result = probe_result.render(username, self.description, self.bot.i18n, interaction.locale)
         
         self.updated = True
         await interaction.message.edit(result, view=None)
@@ -146,7 +148,7 @@ class ProbeCog(commands.Cog):
                         await play_sound(ctx, path)    
             else:
                 # allow forcing of probes
-                view = ProbeForceView(ctx.user, self, ability, bonus, malus, description, probe_result, timeout=10)
+                view = ProbeForceView(ctx.user, self.bot, self, ability, bonus, malus, description, probe_result, timeout=10)
                 await ctx.response.send_message(result, view=view)
                 view.message = await ctx.original_response()
                                                             
