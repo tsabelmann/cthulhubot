@@ -33,6 +33,5 @@ def main():
     # Get token from environment
     token = os.getenv("DISCORD_TOKEN")
 
-    print(bot.commands)
-
+    # print(bot.commands)
     bot.run(token)
