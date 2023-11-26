@@ -18,13 +18,23 @@ import typing
 
 
 class ProbeForceView(View):
-    def __init__(self, user, cog, ability: int, bonus: int, malus: int, probe_result, *, timeout: float | None = 180) -> None:
+    def __init__(self, 
+                 user, 
+                 cog, 
+                 ability: int, 
+                 bonus: int, 
+                 malus: int,
+                 description: str, 
+                 probe_result, 
+                 *, 
+                 timeout: float | None = 180) -> None:
         super().__init__(timeout=timeout)
         self.user = user
         self.cog = cog
         self.ability = ability
         self.bonus = bonus
         self.malus = malus
+        self.description = description
         self.probe_result = probe_result
         self.message = None
         self.updated = False
@@ -34,8 +44,8 @@ class ProbeForceView(View):
         
         probe = Probe(self.ability, self.bonus, self.malus)
         probe_result = probe.probe()
-        user_name = self.user.display_name
-        result = probe_result.render(user_name)
+        username = self.user.display_name
+        result = probe_result.render(username, self.description)
         
         self.updated = True
         await interaction.message.edit(result, view=None)
@@ -119,12 +129,13 @@ class ProbeCog(commands.Cog):
         try:
             probe = Probe(ability, bonus, malus)
             probe_result = probe.probe()
-            user_name = ctx.user.display_name
-            result = probe_result.render(user_name)
+            username = ctx.user.display_name
+            result = probe_result.render(username, description)
             
             if probe_result.is_success():
                 await ctx.response.send_message(result)
                 
+                # play sound
                 if self._play_sounds:
                     if probe_result.value() == 1 and self._success_sound_paths is not None:
                         path = random.choice(self._success_sound_paths)
@@ -134,7 +145,8 @@ class ProbeCog(commands.Cog):
                         path = random.choice(self._failure_sound_paths)
                         await play_sound(ctx, path)    
             else:
-                view = ProbeForceView(ctx.user, self, ability, bonus, malus, probe_result, timeout=10)
+                # allow forcing of probes
+                view = ProbeForceView(ctx.user, self, ability, bonus, malus, description, probe_result, timeout=10)
                 await ctx.response.send_message(result, view=view)
                 view.message = await ctx.original_response()
                                                             
