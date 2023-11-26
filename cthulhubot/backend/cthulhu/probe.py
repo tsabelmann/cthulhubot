@@ -203,6 +203,8 @@ class ProbeResult:
 
         ability_str = AdvancedLocalized("Ability", key="PROBE_RESULT_ABILITY", prot=prot, locale=locale)
         roll_str = AdvancedLocalized("Roll", key="PROBE_RESULT_ROLL", prot=prot, locale=locale)
+        
+        result_str = AdvancedLocalized("Result", key="PROBE_RESULT_RESULT", prot=prot, locale=locale)
     
         if self.bonus_dice_10 != [] and self.malus_dice_10 == []:
             # Check if the bonus had an effect
@@ -246,7 +248,7 @@ class ProbeResult:
             result += f"{roll_str}: [**{self.die_10 * 10:02d}**][**{self.die_1}**] {ability_str}: **{self.ability}**\n"
 
         # Compute result
-        result += f"Result: **{self.value()}**\n"
+        result += f"{result_str}: **{self.value()}**\n"
 
         # Compute success level
         if success == ProbeSuccess.CRITICAL_SUCCESS:
