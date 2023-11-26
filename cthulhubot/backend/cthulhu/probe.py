@@ -253,7 +253,7 @@ class ProbeResult:
 
         # Compute success level
         if success == ProbeSuccess.CRITICAL_SUCCESS:
-            critical = AdvancedLocalized("Critical success", key="CRITIAL_SUCCESS", prot=prot, locale=locale)
+            critical = AdvancedLocalized("Critical success", key="CRITICAL_SUCCESS", prot=prot, locale=locale)
             result += f"**{critical}**\n"
             # result += f"**{Localized('Critical success', key='CRITICAL_SUCCESS').string}**\n"
         elif success == ProbeSuccess.EXTREME_SUCCESS:
