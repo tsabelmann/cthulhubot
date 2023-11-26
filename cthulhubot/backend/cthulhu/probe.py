@@ -203,7 +203,8 @@ class ProbeResult:
 
         ability_str = AdvancedLocalized("Ability", key="PROBE_RESULT_ABILITY", prot=prot, locale=locale)
         roll_str = AdvancedLocalized("Roll", key="PROBE_RESULT_ROLL", prot=prot, locale=locale)
-        
+        bonus_str = AdvancedLocalized("Bonus", key="PROBE_RESULT_BONUS", prot=prot, locale=locale)
+        malus_str = AdvancedLocalized("Malus", key="PROBE_RESULT_MALUS", prot=prot, locale=locale)
         result_str = AdvancedLocalized("Result", key="PROBE_RESULT_RESULT", prot=prot, locale=locale)
     
         if self.bonus_dice_10 != [] and self.malus_dice_10 == []:
@@ -218,13 +219,13 @@ class ProbeResult:
                 lst = [f"**{die * 10:02d}**" if i == index else f"{die * 10:02d}" for i, die in
                        enumerate(self.bonus_dice_10)]
                 dice_str = f"[{', '.join(lst)}]"
-                result += f"Bonus: {dice_str}\n"
+                result += f"{bonus_str}: {dice_str}\n"
             else:
                 result += f"{roll_str}: [**{self.die_10 * 10:02d}**][**{self.die_1}**] {ability_str}: **{self.ability}**\n"
 
                 lst = [f"{die * 10:02d}" for die in self.bonus_dice_10]
                 dice_str = f"[{', '.join(lst)}]"
-                result += f"Bonus: {dice_str}\n"
+                result += f"{bonus_str}: {dice_str}\n"
         elif self.bonus_dice_10 == [] and self.malus_dice_10 != []:
             # Check if the malus had an effect
             if self.value() > dice2value(self.die_10, self.die_1):
@@ -237,13 +238,13 @@ class ProbeResult:
                 lst = [f"**{die * 10:02d}**" if i == index else f"{die * 10:02d}" for i, die in
                        enumerate(self.malus_dice_10)]
                 dice_str = f"[{', '.join(lst)}]"
-                result += f"Bonus: {dice_str}\n"
+                result += f"{bonus_str}: {dice_str}\n"
             else:
                 result += f"{roll_str}: [**{self.die_10 * 10:02d}**][**{self.die_1}**] {ability_str}: **{self.ability}**\n"
 
                 lst = [f"{die * 10:02d}" for die in self.malus_dice_10]
                 dice_str = f"[{', '.join(lst)}]"
-                result += f"Malus: {dice_str}\n"
+                result += f"{malus_str}: {dice_str}\n"
         else:
             result += f"{roll_str}: [**{self.die_10 * 10:02d}**][**{self.die_1}**] {ability_str}: **{self.ability}**\n"
 
