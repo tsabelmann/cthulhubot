@@ -4,8 +4,7 @@
 import asyncio
 
 # Import D
-import discord
-from discord.ext import commands
+from disnake.ext import commands
 
 # Import D
 from dotenv import load_dotenv
