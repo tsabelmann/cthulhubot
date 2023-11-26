@@ -181,6 +181,9 @@ class ProbeResult:
 
     def success(self) -> ProbeSuccess:
         return probe_success(self.value(), self.ability)
+    
+    def is_success(self) -> bool:
+        return (self.value() <= self.ability)
 
     def render(self, user_name: str) -> str:
         success = self.success()
