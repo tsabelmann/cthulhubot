@@ -185,9 +185,13 @@ class ProbeResult:
     def is_success(self) -> bool:
         return (self.value() <= self.ability)
 
-    def render(self, user_name: str) -> str:
+    def render(self, username: str, description: str = "") -> str:
         success = self.success()
-        result = f"**{user_name}**\n"
+        
+        if description != None and description != "":
+            result = f"**{username}** ({description})\n"
+        else:
+            result = f"**{username}**\n"
 
         if self.bonus_dice_10 != [] and self.malus_dice_10 == []:
             # Check if the bonus had an effect
