@@ -20,11 +20,15 @@
   "FAILURE": "Misserfolg",
   "DOOM": "Kritischer Fehlschlag",
 
-  "COMMAND_PROBE_DESCRIPTION": "Befehl, der die Fähigkeit des Investigators überprüft.",
-  "COMMAND_PROBE_PARAM_ABILITY": "fähigkeit",
-  "COMMAND_PROBE_PARAM_ABILITY_DESCRIPTION": "Der Fähigkeitswert, meist zwischen 0 und 100.",
+  "COMMAND_PROBE_DESCRIPTION": "überprüft die Fertigkeit des Investigators.",
+  "COMMAND_PROBE_PARAM_ABILITY": "fertigkeitswert",
+  "COMMAND_PROBE_PARAM_ABILITY_DESCRIPTION": "Der Fertigkeitswert, meist zwischen 0 und 100.",
   "COMMAND_PROBE_PARAM_BONUS": "bonus",
-  "COMMAND_PROBE_PARAM_BONUS_DESCRIPTION": "Die Anzahl an Bonus Würfeln.",
+  "COMMAND_PROBE_PARAM_BONUS_DESCRIPTION": "Die Anzahl an Bonus-Würfeln.",
   "COMMAND_PROBE_PARAM_MALUS": "malus",
-  "COMMAND_PROBE_PARAM_MALUS_DESCRIPTION": "Die Anzahl an Malus Würfeln."
+  "COMMAND_PROBE_PARAM_MALUS_DESCRIPTION": "Die Anzahl an Malus-Würfeln.",
+  "COMMAND_PROBE_PARAM_DESCRIPTION": "beschreibung",
+  "COMMAND_PROBE_PARAM_DESCRIPTION_DESCRIPTION": "Eine kurze Fertigkeitsbeschreibung.",
+
+  "PROBE_FORCE": "Forcieren?"
 }
