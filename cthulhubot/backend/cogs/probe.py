@@ -130,7 +130,7 @@ class ProbeCog(commands.Cog):
             probe = Probe(ability, bonus, malus)
             probe_result = probe.probe()
             username = ctx.user.display_name
-            result = probe_result.render(username, description)
+            result = probe_result.render(username, description, self.bot.i18n, ctx.locale)
             
             if probe_result.is_success():
                 await ctx.response.send_message(result)
