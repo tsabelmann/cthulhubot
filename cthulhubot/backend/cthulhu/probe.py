@@ -195,15 +195,18 @@ class ProbeResult:
                ) -> str:
         success = self.success()
         
+        # Add username and optionally description
         if description != None and description != "":
             result = f"**{username}** ({description})\n"
         else:
             result = f"**{username}**\n"
 
+        roll_str = AdvancedLocalized("Roll", key="PROBE_RESULT_ROLL", prot=prot, locale=locale)
+    
         if self.bonus_dice_10 != [] and self.malus_dice_10 == []:
             # Check if the bonus had an effect
             if self.value() < dice2value(self.die_10, self.die_1):
-                result += f"Roll: [{self.die_10 * 10:02d}][**{self.die_1}**] Ability: **{self.ability}**\n"
+                result += f"{roll_str}: [{self.die_10 * 10:02d}][**{self.die_1}**] Ability: **{self.ability}**\n"
 
                 # Compute index in dice that holds the die_10 value
                 index = [dice2value(die_10, self.die_1) for die_10 in self.bonus_dice_10].index(self.value())
@@ -214,7 +217,7 @@ class ProbeResult:
                 dice_str = f"[{', '.join(lst)}]"
                 result += f"Bonus: {dice_str}\n"
             else:
-                result += f"Roll: [**{self.die_10 * 10:02d}**][**{self.die_1}**] Ability: **{self.ability}**\n"
+                result += f"{roll_str}: [**{self.die_10 * 10:02d}**][**{self.die_1}**] Ability: **{self.ability}**\n"
 
                 lst = [f"{die * 10:02d}" for die in self.bonus_dice_10]
                 dice_str = f"[{', '.join(lst)}]"
@@ -222,7 +225,7 @@ class ProbeResult:
         elif self.bonus_dice_10 == [] and self.malus_dice_10 != []:
             # Check if the malus had an effect
             if self.value() > dice2value(self.die_10, self.die_1):
-                result += f"Roll: [{self.die_10 * 10:02d}][**{self.die_1}**] Ability: **{self.ability}**\n"
+                result += f"{roll_str}: [{self.die_10 * 10:02d}][**{self.die_1}**] Ability: **{self.ability}**\n"
 
                 # Compute index in dice that holds the die_10 value
                 index = [dice2value(die_10, self.die_1) for die_10 in self.malus_dice_10].index(self.value())
@@ -233,13 +236,13 @@ class ProbeResult:
                 dice_str = f"[{', '.join(lst)}]"
                 result += f"Bonus: {dice_str}\n"
             else:
-                result += f"Roll: [**{self.die_10 * 10:02d}**][**{self.die_1}**] Ability: **{self.ability}**\n"
+                result += f"{roll_str}: [**{self.die_10 * 10:02d}**][**{self.die_1}**] Ability: **{self.ability}**\n"
 
                 lst = [f"{die * 10:02d}" for die in self.malus_dice_10]
                 dice_str = f"[{', '.join(lst)}]"
                 result += f"Malus: {dice_str}\n"
         else:
-            result += f"Roll: [**{self.die_10 * 10:02d}**][**{self.die_1}**] Ability: **{self.ability}**\n"
+            result += f"{roll_str}: [**{self.die_10 * 10:02d}**][**{self.die_1}**] Ability: **{self.ability}**\n"
 
         # Compute result
         result += f"Result: **{self.value()}**\n"
@@ -247,8 +250,8 @@ class ProbeResult:
         # Compute success level
         if success == ProbeSuccess.CRITICAL_SUCCESS:
             critical = AdvancedLocalized("Critical success", key="CRITIAL_SUCCESS", prot=prot, locale=locale)
-            result += f"**{Localized('Critical success', key='CRITICAL_SUCCESS').string}**\n"
-            result += f"**{Localized('Critical success', key='CRITICAL_SUCCESS').string}**\n"
+            result += f"**{critical}**\n"
+            # result += f"**{Localized('Critical success', key='CRITICAL_SUCCESS').string}**\n"
         elif success == ProbeSuccess.EXTREME_SUCCESS:
             extreme = AdvancedLocalized("Extreme success", key="EXTREME_SUCCESS", prot=prot, locale=locale)
             result += f"**{extreme}**\n"
