@@ -1,15 +1,14 @@
 """
 """
 import random
-from typing import Any, Coroutine, Optional
-
 from disnake.interactions import MessageInteraction
 
 from cthulhubot.backend.cthulhu.probe import Probe
 from cthulhubot.backend.sound import play_sound
+from cthulhubot.backend.utils.localization import AdvancedLocalized
 
 from disnake.ext import commands
-from disnake import ApplicationCommandInteraction, Localized, LocalizationValue
+from disnake import ApplicationCommandInteraction, Localized, Locale
 from disnake.ui import Button, View, button
 from disnake import ButtonStyle
 
@@ -21,6 +20,7 @@ class ProbeForceView(View):
     def __init__(self, 
                  user, 
                  bot,
+                 locale,
                  cog, 
                  ability: int, 
                  bonus: int, 
@@ -32,6 +32,7 @@ class ProbeForceView(View):
         super().__init__(timeout=timeout)
         self.user = user
         self.bot = bot
+        self.locale = locale
         self.cog = cog
         self.ability = ability
         self.bonus = bonus
@@ -41,26 +42,28 @@ class ProbeForceView(View):
         self.message = None
         self.updated = False
         
-    @button(label="Force?", style=ButtonStyle.red)
-    async def on_button_pressed(self, button, interaction):
-        
-        probe = Probe(self.ability, self.bonus, self.malus)
-        probe_result = probe.probe()
-        username = self.user.display_name
-        result = probe_result.render(username, self.description, self.bot.i18n, interaction.locale)
-        
-        self.updated = True
-        await interaction.message.edit(result, view=None)
-        
-        if self.cog._play_sounds:
-            if probe_result.value() == 1 and self.cog._success_sound_paths is not None:
-                path = random.choice(self.cog._success_sound_paths)
-                await play_sound(interaction, path)
+        async def on_button_pressed(interaction: MessageInteraction):
+            probe = Probe(self.ability, self.bonus, self.malus)
+            probe_result = probe.probe()
+            username = self.user.display_name
+            result = probe_result.render(username, self.description, self.bot.i18n, interaction.locale)
+            
+            self.updated = True
+            await interaction.message.edit(result, view=None)
+            
+            if self.cog._play_sounds:
+                if probe_result.value() == 1 and self.cog._success_sound_paths is not None:
+                    path = random.choice(self.cog._success_sound_paths)
+                    await play_sound(interaction, path)
 
-            elif probe_result.value() == 100 and self.cog._failure_sound_paths is not None:
-                path = random.choice(self.cog._failure_sound_paths)
-                await play_sound(interaction, path)    
+                elif probe_result.value() == 100 and self.cog._failure_sound_paths is not None:
+                    path = random.choice(self.cog._failure_sound_paths)
+                    await play_sound(interaction, path)    
         
+        self.button = Button(label=f"{AdvancedLocalized('Force?', key='PROBE_BUTTON_FORCE', prot=self.bot.i18n, locale=self.locale)}", style=ButtonStyle.red)
+        self.button.callback = on_button_pressed
+        self.add_item(self.button)
+             
     async def interaction_check(self, interaction: MessageInteraction) -> bool:
         if interaction.user == self.user:
             return True
@@ -148,7 +151,7 @@ class ProbeCog(commands.Cog):
                         await play_sound(ctx, path)    
             else:
                 # allow forcing of probes
-                view = ProbeForceView(ctx.user, self.bot, self, ability, bonus, malus, description, probe_result, timeout=10)
+                view = ProbeForceView(ctx.user, self.bot, ctx.locale, self, ability, bonus, malus, description, probe_result, timeout=10)
                 await ctx.response.send_message(result, view=view)
                 view.message = await ctx.original_response()
                                                             
