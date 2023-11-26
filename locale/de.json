@@ -1,7 +1,4 @@
 {
-  "CHOICE_COMMAND_PARAM_VALUE_NAME": "wert",
-  "CHOICE_COMMAND_DESCRIPTION": "Wählt einen Wert aus einer komma-separierten Liste aus.",
-
   "COMMAND_D4_NAME": "d4",
   "COMMAND_D4_DESCRIPTION": "Wirft einen Würfel mit vier Seiten.",
   "COMMAND_D6_NAME": "d6",
@@ -30,5 +27,10 @@
   "COMMAND_PROBE_PARAM_DESCRIPTION": "beschreibung",
   "COMMAND_PROBE_PARAM_DESCRIPTION_DESCRIPTION": "Eine kurze Fertigkeitsbeschreibung.",
 
-  "PROBE_FORCE": "Forcieren?"
+  "PROBE_RESULT_ABILITY": "Fertigkeit",
+  "PROBE_RESULT_ROLL": "Wurf",
+  "PROBE_RESULT_BONUS": "Bonus",
+  "PROBE_RESULT_MALUS": "Malus",
+  "PROBE_RESULT_RESULT": "Ergebnis",
+  "PROBE_BUTTON_FORCE": "Forcieren?"
 }

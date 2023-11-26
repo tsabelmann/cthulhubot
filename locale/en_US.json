@@ -1,7 +1,4 @@
 {
-  "CHOICE_COMMAND_PARAM_VALUE_NAME": "wert",
-  "CHOICE_COMMAND_DESCRIPTION": "Wählt einen Wert aus einer komma-separierten Liste aus.",
-
   "COMMAND_D4_NAME": "d4",
   "COMMAND_D4_DESCRIPTION": "Wirft einen Würfel mit vier Seiten.",
   "COMMAND_D6_NAME": "d6",
@@ -11,5 +8,29 @@
   "COMMAND_D12_NAME": "d12",
   "COMMAND_D12_DESCRIPTION": "Wirft einen Würfel mit zwölf Seiten.",
   "COMMAND_D20_NAME": "d20",
-  "COMMAND_D20_DESCRIPTION": "Wirft einen Würfel mit zwanzig Seiten."
+  "COMMAND_D20_DESCRIPTION": "Wirft einen Würfel mit zwanzig Seiten.",
+
+  "CRITICAL_SUCCESS": "Critial success",
+  "EXTREME_SUCCESS": "Extreme success",
+  "DIFFICULT_SUCCESS": "Difficult success",
+  "REGULAR_SUCCESS": "Regular success",
+  "FAILURE": "You have screwed up!",
+  "DOOM": "You are doomed!",
+
+  "COMMAND_PROBE_DESCRIPTION": "Checks the ability of an investigators.",
+  "COMMAND_PROBE_PARAM_ABILITY": "ability",
+  "COMMAND_PROBE_PARAM_ABILITY_DESCRIPTION": "The ability value, most of the time between 0 and 100.",
+  "COMMAND_PROBE_PARAM_BONUS": "bonus",
+  "COMMAND_PROBE_PARAM_BONUS_DESCRIPTION": "The number of bonus dice.",
+  "COMMAND_PROBE_PARAM_MALUS": "malus",
+  "COMMAND_PROBE_PARAM_MALUS_DESCRIPTION": "The number of malus dice.",
+  "COMMAND_PROBE_PARAM_DESCRIPTION": "description",
+  "COMMAND_PROBE_PARAM_DESCRIPTION_DESCRIPTION": "The ability description.",
+
+  "PROBE_RESULT_ABILITY": "Ability",
+  "PROBE_RESULT_ROLL": "Roll",
+  "PROBE_RESULT_BONUS": "Bonus",
+  "PROBE_RESULT_MALUS": "Malus",
+  "PROBE_RESULT_RESULT": "Result",
+  "PROBE_BUTTON_FORCE": "Force?"
 }
