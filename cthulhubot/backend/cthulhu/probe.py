@@ -238,7 +238,7 @@ class ProbeResult:
                 lst = [f"**{die * 10:02d}**" if i == index else f"{die * 10:02d}" for i, die in
                        enumerate(self.malus_dice_10)]
                 dice_str = f"[{', '.join(lst)}]"
-                result += f"{bonus_str}: {dice_str}\n"
+                result += f"{malus_str}: {dice_str}\n"
             else:
                 result += f"{roll_str}: [**{self.die_10 * 10:02d}**][**{self.die_1}**] {ability_str}: **{self.ability}**\n"
 
